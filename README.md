@@ -1,3 +1,3 @@
 # HTTPClient
 
-A description of this package.
+A simple wrapper around Apple's URL Session to easy creation  
