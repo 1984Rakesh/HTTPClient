@@ -14,6 +14,9 @@ public protocol HTTPResponseDeserialiser {
 
 public struct JSONResponseDeserialiser<T:Decodable> : HTTPResponseDeserialiser {
     public typealias Output = T
+    
+    public init() {}
+    
     public func deserialise(_ data:Data,_ response:URLResponse) throws -> T {
         guard data.count != 0 else { throw HTTPError.noResponse }
         do { return try JSONDecoder().decode(T.self, from: data) }

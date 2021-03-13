@@ -14,6 +14,7 @@ public protocol HTTPRequestBodySerialiser {
 
 public struct JSONRequestBodySerialiser<T:Encodable> : HTTPRequestBodySerialiser {
     public typealias Input = T
+    public init() {}
     public func serialise(_ params: T) throws -> Data? {
         return try JSONEncoder().encode(params)
     }
@@ -21,6 +22,7 @@ public struct JSONRequestBodySerialiser<T:Encodable> : HTTPRequestBodySerialiser
 
 public struct URLEncodedRequestSerialiser : HTTPRequestBodySerialiser {
     public typealias Input = [String:String]
+    public init() {}
     public func serialise(_ params: [String : String]) throws -> Data? {
         let items = params.map { URLQueryItem(name: $0, value: $1) }
         var components = URLComponents()
