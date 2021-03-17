@@ -18,6 +18,7 @@ public enum HTTPMethod : String {
 public enum HTTPContentType : String {
     case urlEncoded = "application/x-www-form-urlencoded"
     case json = "application/json"
+    case none = ""
 }
 
 public protocol HTTPClient {
@@ -38,7 +39,7 @@ open class BaseHTTPClient : HTTPClient {
     
     open func headers<T:EndPointDescriptor>(endPoint:T) -> [String:String] {
         return ["Origin":self.host.absoluteString,
-                "Content-Type":endPoint.contentType]
+                "Content-Type":endPoint.requestBodySerialiser?.contentType ?? HTTPContentType.none.rawValue]
             .merging(self.additionalHeaders ?? [:], uniquingKeysWith:{ $1 })
             .merging(endPoint.headers, uniquingKeysWith:{ $1 })
     }
@@ -51,7 +52,7 @@ open class BaseHTTPClient : HTTPClient {
                     .path(endPoint.path)
                     .params(endPoint.params)
                     .headers(self?.headers(endPoint: endPoint) ?? [:])
-                    .body(endPoint.body())
+                    .body(endPoint.requestBodySerialiser?.serialise())
                              
                 promise(.success(request))
             }
