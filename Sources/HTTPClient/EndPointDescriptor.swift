@@ -8,14 +8,13 @@
 import Foundation
 
 public protocol EndPointDescriptor {
+    associatedtype RequestBodySerialiser : HTTPRequestBodySerialiser
     associatedtype Output
     var path : String { get }
     var method : HTTPMethod { get }
     var params : [String:String] { get }
     var headers : [String:String] { get }
-    var contentType : String { get }
-    
-    func body() throws -> Data?
+    var requestBodySerialiser : RequestBodySerialiser? { get}
     func deserializeResponse(_ data:Data, response:URLResponse) throws -> Output
 }
 
