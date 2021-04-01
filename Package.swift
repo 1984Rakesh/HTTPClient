@@ -21,5 +21,8 @@ let package = Package(
         .testTarget(
             name: "HTTPClientTests",
             dependencies: ["HTTPClient"]),
+    ],
+    swiftLanguageVersions: [
+        .version("5.2")
     ]
 )

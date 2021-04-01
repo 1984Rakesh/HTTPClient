@@ -21,13 +21,13 @@ public enum HTTPContentType : String {
     case none = ""
 }
 
-public protocol HTTPClient {
+public protocol HTTPInterface {
     var baseURL : URL! { get }
     var host : URL! { get }
     var additionalHeaders : [String:String]? { get set }
 }
 
-open class BaseHTTPClient : HTTPClient {
+open class BaseHTTPClient : HTTPInterface {
     public var baseURL: URL!    
     public var host: URL!
     public var additionalHeaders: [String : String]?
