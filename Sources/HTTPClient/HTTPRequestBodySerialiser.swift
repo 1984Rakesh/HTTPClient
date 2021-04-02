@@ -31,7 +31,7 @@ public struct JSONRequestBodySerialiser<T:Encodable> : HTTPRequestBodySerialiser
     }
 }
 
-public struct URLEncodedRequestSerialiser : HTTPRequestBodySerialiser {
+public struct URLEncodedRequestBodySerialiser : HTTPRequestBodySerialiser {
     public typealias Input = [String:String]
     public var contentType: String {  HTTPContentType.urlEncoded.rawValue }
     public var serialiser: SerialiserFunction
