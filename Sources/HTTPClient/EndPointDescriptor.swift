@@ -22,4 +22,5 @@ public extension EndPointDescriptor {
     var method : HTTPMethod { .get }
     var params : [String:String] { [:] }
     var headers : [String:String] { [:] }
+    var path : String { "" }
 }
