@@ -32,6 +32,10 @@ public extension URLRequest {
     }
     
     func path(_ path:String) throws -> URLRequest {
+        guard path.count > 0 else {
+            return self
+        }
+        
         var urlComponents = self.components
         urlComponents?.path = path
         return try updateComponents(urlComponents)
