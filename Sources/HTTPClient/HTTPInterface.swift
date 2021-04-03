@@ -1,6 +1,22 @@
 import Foundation
 import Combine
 
+extension Publisher {
+    public func sinkResult(_ subscriber: @escaping (Result<Output,Error>) -> Void) -> AnyCancellable {
+        return sink(
+            receiveCompletion: { result in
+                switch result {
+                case .failure(let error): subscriber(Result.failure(error))
+                case .finished: break
+                }
+            },
+            receiveValue: { output in
+                subscriber(Result.success(output))
+            }
+        )
+    }
+}
+
 public enum HTTPError: Error {
     case noResponse
     case responseDeserialiseError(error: Error)
