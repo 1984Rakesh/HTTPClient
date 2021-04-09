@@ -38,42 +38,35 @@ public enum HTTPContentType : String {
     case none = ""
 }
 
-public protocol HTTPInterface {
+//protocol Model : Codable, Identifiable, Hashable {
+//}
+
+public protocol HTTPInterface: class {
     var baseURL : URL! { get }
     var host : URL! { get }
-    var additionalHeaders : [String:String]? { get set }
-    var additionalURLParams: [String: String]? { get set }
+    var defaultHeaders : [String:String]? { get set }
+    var defaultURLParams: [String: String]? { get set }
+    
+    func headers<T:EndPointDescriptor>(_ endPoint:T) -> [String:String]
+    func urlParams<T:EndPointDescriptor>(_ endPoint:T) -> [String:String]?
+    func call<T:EndPointDescriptor>(endPoint:T) -> AnyPublisher<T.Output,HTTPError>
 }
 
-extension HTTPInterface {
-    
-}
-
-open class BaseHTTPClient : HTTPInterface {
-    public var baseURL: URL!
-    public var host: URL!
-    open var additionalHeaders: [String : String]?
-    open var additionalURLParams: [String: String]?
-    
-    public init(baseURL:URL) {
-        self.baseURL = baseURL
-        self.host = baseURL
-    }
-    
-    open func headers<T:EndPointDescriptor>(_ endPoint:T) -> [String:String] {
+public extension HTTPInterface {
+    func headers<T:EndPointDescriptor>(_ endPoint:T) -> [String:String] {
         return ["Origin":self.host.absoluteString,
                 "Content-Type":endPoint.requestBodySerialiser?.contentType ?? HTTPContentType.none.rawValue]
-            .merging(self.additionalHeaders ?? [:], uniquingKeysWith: { $1 })
+            .merging(self.defaultHeaders ?? [:], uniquingKeysWith: { $1 })
             .merging(endPoint.headers, uniquingKeysWith: { $1 })
     }
     
-    open func urlParams<T:EndPointDescriptor>(_ endPoint:T) -> [String:String]? {
+    func urlParams<T:EndPointDescriptor>(_ endPoint:T) -> [String:String]? {
         return [String:String]()
-            .merging( self.additionalURLParams ?? [:], uniquingKeysWith: { $1 })
+            .merging( self.defaultURLParams ?? [:], uniquingKeysWith: { $1 })
             .merging( endPoint.params , uniquingKeysWith: { $1 })         
     }
     
-    open func request<T:EndPointDescriptor>(endPoint:T) -> AnyPublisher<URLRequest,HTTPError> {
+    func request<T:EndPointDescriptor>(endPoint:T) -> AnyPublisher<URLRequest,HTTPError> {
         return Future <URLRequest,HTTPError> { [weak self]  promise in
             do {
                 let request = try URLRequest(baseURL: self?.baseURL ?? URL(string: "http://")!)
@@ -92,7 +85,7 @@ open class BaseHTTPClient : HTTPInterface {
         .eraseToAnyPublisher()
     }
     
-    open func call<T:EndPointDescriptor>(endPoint:T) -> AnyPublisher<T.Output,HTTPError>{
+    func call<T:EndPointDescriptor>(endPoint:T) -> AnyPublisher<T.Output,HTTPError>{
         request(endPoint: endPoint)
             .flatMap {
                 URLSession.shared
