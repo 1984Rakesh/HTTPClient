@@ -5,22 +5,13 @@ import PackageDescription
 
 let package = Package(
     name: "HTTPClient",
-    platforms: [
-        .iOS(.v13)
-    ],
+    platforms: [.iOS(.v14)],
     products: [
-        .library(
-            name: "HTTPClient",
-            targets: ["HTTPClient"]),
+        .library( name: "HTTPClient", targets: ["HTTPClient"])
     ],
     dependencies: [],
     targets: [
-        .target(
-            name: "HTTPClient",
-            dependencies: []),
-        .testTarget(
-            name: "HTTPClientTests",
-            dependencies: ["HTTPClient"]),
+        .target( name: "HTTPClient", dependencies: [])
     ],
     swiftLanguageVersions: [
         .version("5.2")
