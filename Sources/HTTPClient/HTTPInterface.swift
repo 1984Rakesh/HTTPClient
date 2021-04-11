@@ -38,8 +38,7 @@ public enum HTTPContentType : String {
     case none = ""
 }
 
-//protocol Model : Codable, Identifiable, Hashable {
-//}
+public typealias ModelObject = Codable & Equatable & Identifiable & Hashable
 
 public protocol HTTPInterface: class {
     var baseURL : URL! { get }
